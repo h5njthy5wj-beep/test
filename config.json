@@ -1,5 +1,4 @@
 {
-    "embedding_dimension": 768,
-    "pooling_mode": "mean",
-    "include_prompt": true
+    "module_input_name": "sentence_embedding",
+    "module_output_name": "sentence_embedding"
 }
