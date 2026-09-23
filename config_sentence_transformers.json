@@ -1,8 +1,8 @@
 {
   "__version__": {
-    "pytorch": "2.12.1+cu130",
-    "sentence_transformers": "6.0.0",
-    "transformers": "5.17.0.dev0"
+    "pytorch": "2.14.0+cu130",
+    "sentence_transformers": "6.1.0",
+    "transformers": "5.18.0.dev0"
   },
   "default_prompt_name": null,
   "model_type": "SentenceTransformer",
@@ -27,6 +27,12 @@
     "Summarization": "task: sentence similarity | query: ",
     "document": "title: none | text: ",
     "query": "task: search result | query: "
+  },
+  "requirements": {
+    "sentence-transformers": {
+      "reason": "Older versions ignore the order of multimodal dict inputs and cannot put several images or texts into a single embedding.",
+      "specifier": ">=6.1.0"
+    }
   },
   "similarity_fn_name": "cosine"
 }

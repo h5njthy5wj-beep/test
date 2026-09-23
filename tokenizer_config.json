@@ -44,7 +44,7 @@
   },
   "pad_token": "<pad>",
   "padding_side": "right",
-  "processor_class": "Gemma4Processor",
+  "processor_class": "EmbeddingGemma2Processor",
   "soc_token": "<|channel>",
   "sot_token": "<|turn>",
   "stc_token": "<|tool_call>",

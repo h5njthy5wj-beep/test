@@ -46,14 +46,15 @@
     "rescale_factor": 0.00392156862745098
   },
   "image_seq_length": 280,
-  "processor_class": "Gemma4Processor",
+  "processor_class": "EmbeddingGemma2Processor",
   "video_processor": {
+    "add_timestamps": false,
     "do_convert_rgb": true,
     "do_normalize": false,
     "do_rescale": true,
     "do_resize": true,
     "do_sample_frames": true,
-    "add_timestamps": false,
+    "fps": 1,
     "image_mean": [
       0.0,
       0.0,
@@ -64,15 +65,14 @@
       1.0,
       1.0
     ],
+    "max_frames": 32,
     "max_soft_tokens": 140,
-    "num_frames": 32,
+    "overflow_strategy": "uniform",
     "patch_size": 16,
     "pooling_kernel_size": 3,
     "resample": 3,
     "rescale_factor": 0.00392156862745098,
-    "fps": 1.0,
-    "overflow_strategy": "uniform",
     "return_metadata": false,
-    "video_processor_type": "Gemma4VideoProcessor"
+    "video_processor_type": "EmbeddingGemma2VideoProcessor"
   }
 }

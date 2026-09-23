@@ -1,6 +1,6 @@
 {
   "architectures": [
-    "Gemma4Embedding"
+    "EmbeddingGemma2Model"
   ],
   "audio_config": {
     "_name_or_path": "",
@@ -46,29 +46,24 @@
   "boa_token_id": 256000,
   "boi_token_id": 255999,
   "dtype": "bfloat16",
-  "embedding_dim": 768,
-  "eoa_token_id": 258883,
   "eoa_token_index": 258883,
   "eoi_token_id": 258882,
   "image_token_id": 258880,
   "initializer_range": 0.02,
-  "model_type": "gemma4_embedding",
+  "model_type": "embedding_gemma2",
   "text_config": {
     "attention_bias": false,
     "attention_dropout": 0.0,
-    "attention_k_eq_v": false,
     "bos_token_id": 2,
     "dtype": "bfloat16",
-    "enable_moe_block": false,
+    "embedding_dim": 768,
     "eos_token_id": 1,
-    "final_logit_softcapping": null,
     "head_dim": 256,
     "hidden_activation": "gelu_pytorch_tanh",
     "hidden_size": 512,
     "hidden_size_per_layer_input": 512,
     "initializer_range": 0.02,
     "intermediate_size": 2048,
-    "is_causal": false,
     "layer_types": [
       "sliding_attention",
       "sliding_attention",
@@ -95,14 +90,11 @@
       "sliding_attention",
       "full_attention"
     ],
-    "max_position_embeddings": 1024,
-    "model_type": "gemma4_text",
-    "moe_intermediate_size": null,
+    "max_position_embeddings": 262144,
+    "model_type": "embedding_gemma2_text",
     "num_attention_heads": 4,
-    "num_experts": null,
     "num_hidden_layers": 24,
     "num_key_value_heads": 2,
-    "num_kv_shared_layers": 0,
     "pad_token_id": 0,
     "per_layer_config": {
       "05": {
@@ -134,17 +126,10 @@
         "rope_type": "default"
       }
     },
-    "sliding_window": 1024,
-    "tie_word_embeddings": true,
-    "top_k_experts": null,
-    "use_bidirectional_attention": "all",
-    "use_cache": true,
-    "use_double_wide_mlp": false,
-    "vocab_size": 262144,
-    "vocab_size_per_layer_input": 0
+    "sliding_window": 512,
+    "vocab_size": 262144
   },
-  "tie_word_embeddings": true,
-  "transformers_version": "5.17.0.dev0",
+  "transformers_version": "5.18.0.dev0",
   "video_token_id": 258884,
   "vision_config": {
     "_name_or_path": "",
@@ -184,7 +169,7 @@
     "rms_norm_eps": 1e-06,
     "rope_parameters": {
       "rope_theta": 100.0,
-      "rope_type": "default"
+      "rope_type": "axial"
     },
     "standardize": false,
     "use_clipped_linears": false
