@@ -117,7 +117,7 @@ For optimal embedding quality and runtime efficiency, follow these configuration
 
 EmbeddingGemma 2 is trained with short task instruction prefixes prepended to text inputs. Using the right prefix improves retrieval quality; omitting it still works but reduces precision. Prefixes apply to text only. Pass images, video, and audio without any prefix. 
 
-Documents with a real title should be formatted as `title: {title} | text: {content}`\`. Use `title: none` when no title is available.
+Documents with a real title should be formatted as `title: {title} | text: {content}`. Use `title: none` when no title is available.
 
 **Prefix Notation & Usage**
 
@@ -128,13 +128,13 @@ We offer two types of task prefixes, depending on how embeddings are used in the
 
 | Use Case | Task Type | Query Task Instruction | Document Task Instruction *(use `none` if no title)* |
 | :---- | :---- | :---- | :---- |
-| Web / document search | Asymmetric | `task: search result | query: {query}` | `title: {title} | text: {content}` |
-| Question answering | Asymmetric | `task: question answering | query: {question}` | `title: {title} | text: {passage}` |
-| Fact checking | Asymmetric | `task: fact checking | query: {claim}` | `title: {title} | text: {evidence}` |
-| Code search | Asymmetric | `task: code retrieval | query: {query}` | `title: {title or filename} | text: {code}` |
-| Text classification | Symmetric | `task: classification | query: {content}` | N/A |
-| Clustering | Symmetric | `task: clustering | query: {content}` | N/A |
-| Measuring similarity | Symmetric | `task: sentence similarity | query: {content}` | N/A |
+| Web / document search | Asymmetric | `task: search result \| query: {query}` | `title: {title} \| text: {content}` |
+| Question answering | Asymmetric | `task: question answering \| query: {question}` | `title: {title} \| text: {passage}` |
+| Fact checking | Asymmetric | `task: fact checking \| query: {claim}` | `title: {title} \| text: {evidence}` |
+| Code search | Asymmetric | `task: code retrieval \| query: {query}` | `title: {title or filename} \| text: {code}` |
+| Text classification | Symmetric | `task: classification \| query: {content}` | N/A |
+| Clustering | Symmetric | `task: clustering \| query: {content}` | N/A |
+| Measuring similarity | Symmetric | `task: sentence similarity \| query: {content}` | N/A |
 
 **Please note:** Prefixes are used on text inputs only when encoding images, video, or audio pass them directly.
 
