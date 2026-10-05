@@ -42,7 +42,7 @@ EmbeddingGemma 2 builds upon the architectural and capability advancements of Ge
 * **Multilinguality and code:** EmbeddingGemma 2 understands 100+ languages, and achieves a \~14% improvement on code tasks relative to our last EmbeddingGemma (MTEB code).&nbsp;  
 * **Cross-modality semantics:** Trained to capture semantic similarity, across the modality boundaries. This means equivalent concepts, whether expressed in text, source code, images, video, or audio, are co-located in the embedding space.  
 * **Flexible footprint:** Combines a 270M parameter text backbone (130M transformer \+ 140M embedder) with selectively loadable vision (170M) and audio (300M) encoders, allowing developers to load only the modalities required for their use case.  
-* **Matryoshka Representation Learning (MRL):** Native support for truncated vector projections across 128d, 256d, 512d, and 768d, enabling up to a **6x reduction** in vector storage costs with minimal impact on retrieval quality.  
+* **Matryoshka Representation Learning (MRL):** Native support for truncated vector projections across 128d, 256d, 512d, and 768d, enabling up to a **6x reduction** in vector storage costs with minimal impact on quality.  
 * **Context length:** 8K token context window, capable of processing interleaved multimodal input.  
 * **Task-steered representations:** Uses lightweight text instruction prefixes to optimize vector projections for different tasks (search, classification, clustering, semantic similarity, etc).
 
@@ -82,7 +82,7 @@ During inference, all modalities draw from one shared 8,192-token context window
 
 ## **Benchmark Results**
 
-EmbeddingGemma 2 was evaluated across text, code, vision, visual document, video, and audio retrieval benchmarks. All results reported below use the full-precision checkpoint.
+EmbeddingGemma 2 was evaluated across text, code, vision, visual document, video, and audio embedding benchmarks. All results reported below use the full-precision checkpoint.
 
 ### Overall Evaluation Results (768d)
 
@@ -90,7 +90,7 @@ EmbeddingGemma 2 was evaluated across text, code, vision, visual document, video
 | :---- | :---- | :---- | :---- | :---- |
 | *Text* | Massive Text Embedding Benchmark (MTEB, multilingual, v2) *Hugging Face* | Mean (Task) | 61.36 | 61.15 |
 |  | Massive Text Embedding Benchmark (MTEB, code, v1) *Hugging Face* | Mean (Task) | 78.54 | 68.76 |
-| *Image* | Massive Image Embedding Benchmark (MIEB, lite) *Hugging Face* | Mean (Task) | 58.74 | \- |
+| *Image* | Massive Image Embedding Benchmark (MIEB, lite) *Hugging Face* | Mean (TaskType) | 64.64 | \- |
 |  | Massive Multimodal Embedding Benchmark (MMEB v2 \- Image) *Tiger-Lab* | Recall@1 | 57.28 | \- |
 |  | Massive Multimodal Embedding Benchmark (MMEB v2 \- VisDoc) *Tiger-Lab* | NDCG@5 | 67.84 | \- |
 | *Video* | Massive Multimodal Embedding Benchmark (MMEB v2 \- Video) *Tiger-Lab* | Recall@1 | 50.67 | \- |
@@ -102,12 +102,35 @@ EmbeddingGemma 2 was evaluated across text, code, vision, visual document, video
 With MRL, EmbeddingGemma 2 embedding representations can be truncated below the native 768d, to 128d, 256d, and 512d representations and re-normalized.
 With this, model users can reduce storage requirements, with minimal quality impact down to 256d. 128d is best suited to text-only workloads.
 
-| Output Dimension | Compression Ratio | MTEB *(multilingual, v2) Mean(Task)* | MTEB  *(eng, v2) Mean(Task)* | MTEB *(code, v1) Mean(Task)* | MMEB (v2) *Overall* | MSEB  *(Retrieval) Overall* | MAEB   *Overall* |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 768d (Full) | 1:1 | 61.36 | 68.46 | 78.54 | 59.01 | 69.54 | 49.39 |
-| 512d | 1:1.5 | 61.17 | 68.41 | 77.24 | 58.38 | 69.18 | 49.21 |
-| 256d | 1:3 | 60.41 | 67.78 | 76.18 | 56.24 | 66.76 | 48.91 |
-| 128d | 1:6 | 57.89 | 65.68 | 71.41 | 45.65 | 56.71 | 46.92 |
+| Output Dimension | Compression Ratio | MTEB *(multilingual, v2) Mean(Task)* | MTEB  *(eng, v2) Mean(Task)* | MTEB *(code, v1) Mean(Task)* | MIEB *(lite) Mean(TaskType)* | MMEB (v2) *Overall* | MSEB  *(Retrieval) Overall* | MAEB   *Overall* |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 768d (Full) | 1:1 | 61.36 | 68.46 | 78.54 | 64.64 | 59.01 | 69.54 | 49.39 |
+| 512d | 1:1.5 | 61.17 | 68.41 | 77.24 | 64.32 | 58.38 | 69.18 | 49.21 |
+| 256d | 1:3 | 60.41 | 67.78 | 76.18 | 63.13 | 56.24 | 66.76 | 48.91 |
+| 128d | 1:6 | 57.89 | 65.68 | 71.41 | 59.06 | 45.65 | 56.71 | 46.92 |
+
+## **Quick Start**
+
+Install the `sentence-transformers` library: 
+
+```bash
+pip install -U sentence-transformers transformers
+```
+
+Generate text embeddings:
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("google/embeddinggemma-2")
+
+query = "What causes the northern lights?"
+document = "The northern lights are caused by charged particles from the sun."
+
+query_emb = model.encode(query, prompt_name="SearchQuery")
+doc_emb = model.encode(document, prompt_name="Document")
+print(model.similarity(query_emb, doc_emb))
+```
+
 
 ## **Best Practices**
 
@@ -115,7 +138,7 @@ For optimal embedding quality and runtime efficiency, follow these configuration
 
 ### 1. Task Instruction Prefixes
 
-EmbeddingGemma 2 is trained with short task instruction prefixes prepended to text inputs. Using the right prefix improves retrieval quality; omitting it still works but reduces precision. Prefixes apply to text only. Pass images, video, and audio without any prefix. 
+EmbeddingGemma 2 is trained with short task instruction prefixes prepended to text inputs. Using the right prefix improves quality; omitting it still works but reduces precision. Prefixes apply to text only. Pass images, video, and audio without any prefix. 
 
 Documents with a real title should be formatted as `title: {title} | text: {content}`. Use `title: none` when no title is available.
 
@@ -126,41 +149,51 @@ We offer two types of task prefixes, depending on how embeddings are used in the
 * **Asymmetric Tasks (e.g. retrieval):** Use a query prefix for queries and a document prefix for corpus items.  
 * **Symmetric Tasks (e.g. classification, similarity)**: Apply the same task prefix to all inputs being compared.
 
-| Use Case | Task Type | Query Task Instruction | Document Task Instruction *(use `none` if no title)* |
-| :---- | :---- | :---- | :---- |
-| Web / document search | Asymmetric | `task: search result \| query: {query}` | `title: {title} \| text: {content}` |
-| Question answering | Asymmetric | `task: question answering \| query: {question}` | `title: {title} \| text: {passage}` |
-| Fact checking | Asymmetric | `task: fact checking \| query: {claim}` | `title: {title} \| text: {evidence}` |
-| Code search | Asymmetric | `task: code retrieval \| query: {query}` | `title: {title or filename} \| text: {code}` |
-| Text classification | Symmetric | `task: classification \| query: {content}` | N/A |
-| Clustering | Symmetric | `task: clustering \| query: {content}` | N/A |
-| Measuring similarity | Symmetric | `task: sentence similarity \| query: {content}` | N/A |
+| Use Case | Task Type | Prompt Name | Query Task Instruction | Document Task Instruction *(use `none` if no title)* |
+| :---- | :---- | :---- | :---- | :---- |
+| Web / document search | Asymmetric | SearchQuery | `task: search result \| query: {query}` | `title: {title} \| text: {content}` |
+| Question answering | Asymmetric | QuestionAnswering | `task: question answering \| query: {question}` | `title: {title} \| text: {passage}` |
+| Fact checking | Asymmetric | FactChecking | `task: fact checking \| query: {claim}` | `title: {title} \| text: {evidence}` |
+| Code search | Asymmetric | CodeRetrieval | `task: code retrieval \| query: {query}` | `title: {title or filename} \| text: {code}` |
+| Text classification | Symmetric | Classification | `task: classification \| query: {content}` | N/A |
+| Clustering | Symmetric | Clustering | `task: clustering \| query: {content}` | N/A |
+| Measuring similarity | Symmetric | SentenceSimilarity | `task: sentence similarity \| query: {content}` | N/A |
 
-**Please note:** Prefixes are used on text inputs only when encoding images, video, or audio pass them directly.
+**Please note:** `prompt_name="Document"` applies `title: none`; titled documents must still be formatted manually, like `model.encode(f"title: {title} | text: {document}")`
 
 ### 2. Selective Encoder Loading
 
-The vision and audio encoders are independent components. If EmbeddingGemma 2 use cases do not require these components, they can be omitted, so memory footprint scales with the modalities actually used.
+The vision and audio encoders are independent components. To reduce memory consumption when deploying text-only or single-modality pipelines, disable unused modality encoders via SentenceTransformer’s `config_kwargs`:
 
 **Please note:** configuring EmbeddingGemma 2 to load with omission of some encoders differs among model libraries; please refer to the appropriate documentation for more information on this.
 
-| Active Modalities | Effective Size |
-| :---- | :---- |
-| Text only | 270M |
-| Text and image | 440M |
-| Text and audio | 570M |
-| Full multimodal | 740M |
+| Active Modalities | `config_kwargs` | Effective Size |
+| :---- | :---- | :---- |
+| Text only | `{"vision_config": None, "audio_config": None}` | 270M |
+| Text and image | `{"audio_config": None}` | 440M |
+| Text and audio | `{"vision_config": None}` | 570M |
+| Full multimodal | `{}` | 740M |
 
-### 3. Matryoshka Dimension Truncation (`truncate_dim`)
+### 3. Matryoshka Dimension Truncation
 
-EmbeddingGemma 2 is trained with Matryoshka Representation Learning, so the 768-dimensional output vector can be shortened by keeping only its leading dimensions. The supported dimensions are 768, 512, 256, and 128\. Shorter vectors reduce storage and speed up similarity search at some cost to retrieval quality.
+EmbeddingGemma 2 is trained with Matryoshka Representation Learning, so the 768-dimensional output vector can be shortened by keeping only its leading dimensions. The supported dimensions are 768, 512, 256, and 128\. Shorter vectors reduce storage and speed up similarity search at some cost to quality.
 
 At runtime, please adhere to the following guidelines:
 
 * **Re-normalize after truncating:** slicing a unit-length vector does not preserve unit length. The shortened vector must be L2-normalized before it is used for cosine similarity. Skipping this step degrades ranking quality silently — it produces plausible-looking scores rather than an error.  
-* **Queries and documents must share a dimension.** A 128-dimensional query cannot be scored against a 768-dimensional corpus. Changing the dimension means re-encoding the corpus.
+* **Queries and documents must share a dimension.** A 768-dimensional query cannot be scored against a 128-dimensional corpus.
+* 
+To avoid truncating and normalizing yourself, you should pass in the `truncate_dim` and `normalize_embeddings` fields when calling `model.encode()`:
 
-Retrieval quality at each dimension is reported in the truncation table in the **Benchmark Results** section above. Quality is close to lossless down to 256 dimensions. 128 dimensions degrades multimodal and speech retrieval substantially and should be validated against your own workload before adoption.
+```python
+query_emb = model.encode(
+   query,
+   truncate_dim=128, # or 512, 256
+   normalize_embeddings=True,
+)
+```
+
+Model quality at each dimension is reported in the truncation table in the **Benchmark Results** section above. Quality is close to lossless down to 256 dimensions. 128 dimensions degrades multimodal quality substantially and should be validated against your own workload before adoption.
 
 ### 4. Numerical Precision
 
@@ -170,7 +203,17 @@ EmbeddingGemma 2's activation range exceeds the dynamic range of `float16`. In `
 
 `bfloat16` is safe, and carries the same 8-bit exponent as `float32`. This is the recommended default on hardware with native support, and halves memory use relative to `float32`. Use `float32` elsewhere, including on most CPUs.
 
-### 5. Interleaved Multimodal Input
+In SentenceTransformers, you can set this via `model_kwargs`, and determine it programmatically via `is_bf16_supported`:
+
+```python
+dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float32
+
+model = SentenceTransformer("google/embeddinggemma-2", model_kwargs={"torch_dtype": dtype})
+```
+
+### 5. Multimodal Input
+
+#### Interleaving
 
 A single input may mix text with images, video, and audio, using a single shared 8,192-token context.
 
@@ -180,13 +223,19 @@ The position of each media item within the sequence is marked in the text using 
 * `<|video|>` marks the position of video input  
 * `<|audio|>` marks the position of audio input&nbsp;
 
-For example, a product listing indexed for search might be written as:
+For example, a product listing indexed for search might be encoded as:
 
-“`Waterproof trail running shoe with a breathable mesh upper. <|image|> Grip test on wet rock: <|video|>`”
+```python
+emb_interleaved = model.encode({
+    "text": "Waterproof running shoes. <|image|> Featuring a breathable mesh upper. <|image|> Grip test on wet rock: <|video|>",
+    "image": ["shoe.jpg", "mesh.jpg"],
+    "video": "demo.mp4",
+})
+```
 
-In this example, the image and video are replaced with one product photo and one short clip. Put together, this produces a single embedding that represents the text, image and video together. A text-only query such as "waterproof shoes for trail running" can then be matched against it directly.
+Each placeholder in text is filled from the corresponding key, in order. The call returns a single embedding that represents the text, images and video together. This embedding can be compared directly against any other EmbeddingGemma 2 embedding; for example, a text-only query such as “waterproof shoes for trail running”.
 
-### 6. Context Budget by Modality
+#### Context Limits
 
 All modalities share a single 8,192-token context window. Each modality consumes that budget at a fixed rate:
 
@@ -197,20 +246,22 @@ All modalities share a single 8,192-token context window. Each modality consumes
 | *Video* | 140 tokens per frame  *(default)* | ~58 frames |
 | *Audio* | 25 tokens per second | ~327 seconds |
 
+Note max input for images and video can be as high as ~114 images or frames when using a lower vision token budget (described below).
+
 The maximums above assume a single modality with no accompanying text. Interleaved inputs draw from the same budget, so mixing modalities reduces the amount of each that fits. Note also max input for images and video can be as high as \~114 images or frames when using a lower vision token budget (described below).
 
-**Input Sampling Defaults**
+#### Vision Token Budget
+
+Model users can forgo the default sequence length for input images / video frames to represent images with “soft token” amounts ranging from 70 to 1120\. Increasing the vision budget for input images trades latency and token count for quality.&nbsp;
+
+In general, higher input sequence lengths capture more information. Scaling up input sequence length means more expressive input representations; so, increasing input sequence length will improve fine-grained visual understanding, uplifting embedding quality and performance in downstream use cases.
+
+#### Input Sampling Defaults
 
 Audio and video inputs have the following default sampling rates:
 
 * By default, video is processed as sampled frames through the vision encoder at **1 frame per second;** FPS sampling rate is configurable.  
 * Audio should be supplied as **mono at 16 kHz.**
-
-**Vision Token Budget**
-
-Model users can forgo the default sequence length for input images / video frames to represent images with “soft token” amounts ranging from 70 to 1120\. Increasing the vision budget for input images trades latency and token count for quality.&nbsp;
-
-In general, higher input sequence lengths capture more information. Scaling up input sequence length means more expressive input representations; so, increasing input sequence length will improve fine-grained visual understanding, uplifting embedding quality and performance in downstream use cases.
 
 ## **Model Data**
 
@@ -266,7 +317,7 @@ The following list of potential uses is not comprehensive. The purpose of this l
   * Open-ended or highly complex tasks might be challenging.  
   * A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).  
 * **Language Ambiguity and Nuance:** Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.  
-* **Task Instruction Usage:** For text retrieval, omitting the recommended task prefix may lead to sub-optimal embedding quality.
+* **Task Instruction Usage:** For text tasks, omitting the recommended task prefix may lead to sub-optimal embedding quality.
 
 ### Ethical Considerations and Risks
 
