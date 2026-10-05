@@ -36,9 +36,6 @@ library_name: transformers
 
 Designed to run on consumer hardware such as mobile devices and laptops, EmbeddingGemma 2 delivers low-latency semantic representations for on-device applications, like search, retrieval-augmented generation (RAG), classification, and clustering.
 
-
-## **Model Overview**
-
 EmbeddingGemma 2 builds upon the architectural and capability advancements of Gemma 4, offering several core features:&nbsp;
 
 * **Native multimodality:** Native multimodality: Unifies 4 modalities (text, images, video, and audio) in a single shared 768-dimensional embedding space.
@@ -48,7 +45,7 @@ EmbeddingGemma 2 builds upon the architectural and capability advancements of Ge
 * **Context length:** 8K token context window, capable of processing minutes of audio or video.
 * **Task-steered representations:** Uses lightweight text instruction prefixes to optimize embeddings for different tasks (search, classification, clustering, semantic similarity, etc.).
 
-### EmbeddingGemma 2
+### Model Overview
 
 | Parameters | Total | 740M |
 | :---- | :---- | :---- |
