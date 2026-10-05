@@ -328,4 +328,16 @@ In creating an open embedding model, we have carefully considered the following:
   * Training data used for EmbeddingGemma 2 underwent safety filtering to mitigate the risk of these biases.  
 * **Misinformation and Misuse**  
   * Embedding representations can be misused to retrieve, classify, or otherwise organize embedded content in false, misleading or harmful ways.&nbsp;  
-  * Guidelines are provided for responsible use with the model, see the [Responsible 
+  * Guidelines are provided for responsible use with the model, see the [Responsible
+
+### Risks Identified and Mitigations
+
+* **Misuse for malicious purposes:** Technical limitations and developer and end-user education can help mitigate against malicious applications of embedding models. Educational resources and reporting mechanisms for users to flag misuse are provided.  
+* **Privacy violations:** Models were trained on data filtered for removal of certain personal information and other sensitive data. Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.  
+* **Perpetuation of biases:** It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
+
+### Benefits
+
+EmbeddingGemma 2 is among the strongest multimodal embedding models under 1B parameters. We’re excited to see how developers will use and adapt this model for on-device or edge AI applications.&nbsp;
+
+The model is designed from the ground up for responsible AI development, like other Gemma-family models.
