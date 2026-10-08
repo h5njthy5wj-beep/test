@@ -14,9 +14,10 @@ tags:
 - audio-feature-extraction
 - video-feature-extraction
 - sentence-similarity
+- transformers
 language:
 - multilingual
-library_name: transformers
+library_name: sentence-transformers
 ---
 
 <div align="center">
