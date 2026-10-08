@@ -16,7 +16,7 @@ tags:
 - sentence-similarity
 language:
 - multilingual
-library_name: transformers
+library_name: sentence-transformers
 ---
 
 <div align="center">
