@@ -28,3 +28,5 @@
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.zst filter=lfs diff=lfs merge=lfs -text
 *tokenizer.json filter=lfs diff=lfs merge=lfs -text
+Screenshot_20250520_023216_com.imo.android.imoim.jpg filter=lfs diff=lfs merge=lfs -text
+Screenshot_20250607_062325.jpg filter=lfs diff=lfs merge=lfs -text
